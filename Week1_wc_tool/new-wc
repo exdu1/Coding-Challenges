@@ -1,0 +1,55 @@
+#!/usr/bin/env python3
+import argparse
+import os
+
+
+def read_file(file_path):
+    """Reads the content and lines from the file."""
+    with open(file_path, 'r', encoding='utf-8-sig') as file:
+        content = file.read()       
+    return content
+
+
+def main():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('filename', help="Name of plain text file to read")
+    parser.add_argument('-c', action='store_true', help='Count bytes in a file')
+    parser.add_argument('-l', action='store_true', help='Count lines in a file')
+    parser.add_argument('-w', action='store_true',  help='Count words in a file')
+    parser.add_argument('-m', action='store_true',  help='Count characters in a file')
+    args = parser.parse_args()  # Parse command line input
+
+    # Get current working directory and full file path
+    cwd = os.getcwd()
+    file_path = os.path.join(cwd, args.filename)
+
+    if os.path.isfile(file_path):
+        content= read_file(file_path)
+        lines = content.splitlines()
+
+        # Get file statistics
+        byte_count = os.path.getsize(file_path)
+        line_count = len(lines)
+        word_count = len(content.split())
+        char_count = len(content)
+
+        '''Output results'''
+        if not (args.c or args.l or args.w or args.m):
+          print(f'{line_count}   {word_count}  {byte_count} {args.filename}')
+        if args.c:
+          print (f'{byte_count} {args.filename}')
+        if args.l:
+          print(f'{line_count} {args.filename}')
+
+        if args.w:
+          print(f'{word_count} {args.filename}')
+        if args.m:
+          print(f'{char_count} {args.filename}')
+
+    else:
+        print(f'{args.filename} does not exist')
+
+
+if __name__ == '__main__':
+    main()
